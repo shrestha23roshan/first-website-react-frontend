@@ -18,14 +18,21 @@ import axios from "axios";
 
 export default function Home() {
   const [banner, setBanner] = useState([]);
+  const [about, setAbout] = useState([]);
 
   useEffect(() => {
     fetchBanner();
+    fetchaboutus();
   }, []);
 
   const fetchBanner = async () => {
     await axios.get(`http://localhost:8000/api/banner`).then(({ data }) => {
       setBanner(data);
+    });
+  };
+  const fetchaboutus = async () => {
+    await axios.get(`http://localhost:8000/api/about`).then(({ data }) => {
+      setAbout(data);
     });
   };
 
@@ -37,7 +44,7 @@ export default function Home() {
           <Carousel>
             {banner.length > 0 &&
               banner.map((bann, key) => (
-                <Carousel.Item>
+                <Carousel.Item key={key}>
                   <img
                     className="front-d-block w-100"
                     src={`http://localhost:8000/uploads/banners/${bann.banner_img}`}
@@ -58,19 +65,8 @@ export default function Home() {
           <div className="about__container  bd-grid">
             <Fade right>
               <div className="about__data">
-                <h2 className="section-title about__initial">About Us</h2>
-                <p className="about__description">
-                  Nyatapol Technologies Pvt Ltd. (NTECH), an IT company,
-                  delivers superior returns to client through its cost
-                  effective, high value service model. NTECH's core portfolio
-                  comprises of Information Technology services focusing on
-                  internet and intranet based solutions, services, maintenance
-                  support, software development, consultancy, and information
-                  technology transformation services. Within a short period of
-                  its establishment NTECH has helped majority of the banks,
-                  financial institutions, private organizations and leading
-                  organizations achieve more from their IT investment.
-                </p>
+                <h2 className="section-title about__initial">{about.title}</h2>
+                <p className="about__description">{about.description}</p>
                 {/* <!-- <a href="#" className="button">Read More</a> --> */}
               </div>
             </Fade>
