@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Banner1 from "../../theme_front/assets/image/banner1.png";
 import Banner2 from "../../theme_front/assets/image/banner2.jpg";
 import About from "../../theme_front/assets/image/about.png";
@@ -14,38 +14,41 @@ import Location from "../../theme_front/assets/image/location.png";
 import Email from "../../theme_front/assets/image/email.png";
 import Phone from "../../theme_front/assets/image/phone.png";
 
+import axios from "axios";
+
 export default function Home() {
+  const [banner, setBanner] = useState([]);
+
+  useEffect(() => {
+    fetchBanner();
+  }, []);
+
+  const fetchBanner = async () => {
+    await axios.get(`http://localhost:8000/api/banner`).then(({ data }) => {
+      setBanner(data);
+    });
+  };
+
   return (
     <>
       {/* ----------------banner section -------------------------- */}
       <div>
         <Fade top>
           <Carousel>
-            <Carousel.Item>
-              <img
-                className="front-d-block w-100"
-                src={Banner1}
-                alt="First slide"
-              />
-              <Carousel.Caption>
-                <h3>First slide label</h3>
-                <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="front-d-block w-100"
-                src={Banner2}
-                alt="Second slide"
-              />
-
-              <Carousel.Caption>
-                <h3>Second slide label</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              </Carousel.Caption>
-            </Carousel.Item>
+            {banner.length > 0 &&
+              banner.map((bann, key) => (
+                <Carousel.Item>
+                  <img
+                    className="front-d-block w-100"
+                    src={`http://localhost:8000/uploads/banners/${bann.banner_img}`}
+                    alt="First slide"
+                  />
+                  <Carousel.Caption>
+                    <h3>{bann.title}</h3>
+                    <p>{bann.sub_title}</p>
+                  </Carousel.Caption>
+                </Carousel.Item>
+              ))}
           </Carousel>
         </Fade>
       </div>
