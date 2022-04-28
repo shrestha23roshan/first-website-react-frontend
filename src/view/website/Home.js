@@ -22,11 +22,13 @@ export default function Home() {
   const [spinner, setSpinner] = useState(true);
 
   const [banner, setBanner] = useState([]);
-  const [about, setAbout] = useState([]);
+  const [abouts, setAbout] = useState([]);
+  const [services, setServices] = useState([]);
 
   useEffect(() => {
     fetchBanner();
     fetchaboutus();
+    fetchServices();
   }, []);
 
   const fetchBanner = async () => {
@@ -43,6 +45,14 @@ export default function Home() {
       .then(({ data }) => {
         setSpinner(false);
         setAbout(data);
+      });
+  };
+  const fetchServices = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_BASE_URL}api/service`)
+      .then(({ data }) => {
+        setSpinner(false);
+        setServices(data);
       });
   };
 
@@ -87,15 +97,15 @@ export default function Home() {
                 <Fade right>
                   <div className="about__data">
                     <h2 className="section-title about__initial">
-                      {about.title}
+                      {abouts.title}
                     </h2>
-                    <p className="about__description">{about.description}</p>
+                    <p className="about__description">{abouts.description}</p>
                     {/* <!-- <a href="#" className="button">Read More</a> --> */}
                   </div>
                 </Fade>
                 <Fade left>
                   <img
-                    src={`${process.env.REACT_APP_BASE_URL}uploads/abouts/${about.about_img}`}
+                    src={`${process.env.REACT_APP_BASE_URL}uploads/abouts/${abouts.about_img}`}
                     alt=""
                     className="about__img"
                   />
@@ -110,31 +120,23 @@ export default function Home() {
               <h2 className="section-title">Our Services</h2>
 
               <div className="services__container  bd-grid">
-                <div className="services__content">
-                  <img src={Service1} className="services__img" />
-                  <h3 className="services__title">Web Development</h3>
-                  <p className="services__description">
-                    Our website developers provide expert web application
-                    development and web design services to our clients. We offer
-                    a variety of website design and development services, from
-                    creating web development solutions and responsive website
-                    designs.
-                  </p>
-                </div>
-                <div className="services__content">
-                  <img src={Service2} className="services__img" />
-                  <h3 className="services__title">Application Development</h3>
-                  <p className="services__description">
-                    We offer customer-focused, creating strategic mobile
-                    solutions that deliver tangible business results, NTECH's
-                    mobile application development services help businesses
-                    navigate any and all facets of the digital landscape.
-                  </p>
-                </div>
+                {services.length > 0 &&
+                  services.map((service, key) => (
+                    <div className="services__content" key={key}>
+                      <img
+                        src={`${process.env.REACT_APP_BASE_URL}uploads/services/${service.service_img}`}
+                        className="services__img"
+                      />
+                      <h3 className="services__title">{service.title}</h3>
+                      <p className="services__description">
+                        {service.description}
+                      </p>
+                    </div>
+                  ))}
               </div>
             </section>
           </div>
-          {/* ----------------------client section---------------------------- */}
+          {/* ----------------------client section is static- --------------------------- */}
           <div className="front_side">
             <section className="clients section" id="clients">
               <span className="section-subtitle">CLIENTS</span>
@@ -178,7 +180,7 @@ export default function Home() {
               </div>
             </section>
           </div>
-          {/* -------------------product section --------------------------------------- */}
+          {/* -------------------product section is static--------------------------------------- */}
           <div className="front_side">
             <section className="products section bd-container" id="products">
               <span className="section-subtitle">PRODUCTS</span>
